@@ -3,11 +3,13 @@ version: '3.8'
 services:
   flask:
     build: .
-    container_name: flask-app
-    ports:
-      - "5000:5000"
+    container_name: flask
     networks:
-      - app-network
+      - backend
+    expose:
+      - "5000"
+    environment:
+      - FLASK_ENV=production
     depends_on:
       - keycloak
 
@@ -19,25 +21,24 @@ services:
     ports:
       - "80:80"
     networks:
-      - app-network
+      - backend
     depends_on:
       - flask
+    restart: always
 
   keycloak:
-    image: jboss/keycloak:latest
+    image: quay.io/keycloak/keycloak:latest
     container_name: keycloak
     environment:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - DB_VENDOR=h2
-      - KEYCLOAK_IMPORT=/opt/keycloak/realm-export.json
     ports:
       - "8080:8080"
-    volumes:
-      - ./keycloak-realm-export.json:/opt/keycloak/realm-export.json
     networks:
-      - app-network
+      - backend
+    restart: always
 
 networks:
-  app-network:
+  backend:
     driver: bridge
