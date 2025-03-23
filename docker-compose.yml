@@ -32,6 +32,7 @@ services:
     environment:
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=admin
+      - DB_VENDOR=h2
       - KC_HOSTNAME=localhost
       - KC_HTTP_RELATIVE_PATH=/auth
     ports:
